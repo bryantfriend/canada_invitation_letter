@@ -1,73 +1,336 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  FileText, 
-  User, 
-  MapPin, 
-  Calendar, 
-  Briefcase, 
-  Info, 
-  Download, 
-  ChevronRight, 
-  ChevronLeft, 
-  CheckCircle,
-  Map,
-  ShieldCheck,
-  Globe
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Maple Leaf Inviter | Canada Visa Invitation Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .serif-font { font-family: 'Lora', serif; }
+        .step-transition { transition: all 0.3s ease-in-out; }
+        .maple-bg {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ef4444' fill-opacity='0.03'%3E%3Cpath d='M12,2L13.5,6.5L18,5L16.5,9.5L21,11L16.5,12.5L18,17L13.5,15.5L12,20L10.5,15.5L6,17L7.5,12.5L3,11L7.5,9.5L6,5L10.5,6.5L12,2Z'/%3E%3C/svg%3E");
+            background-size: 100px;
+        }
+        .hidden-step { display: none; }
+        input:focus, select:focus { border-color: #ef4444 !important; outline: none; }
+        @media print {
+            .no-print { display: none; }
+            .print-only { display: block; }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-900 maple-bg">
 
-const App = () => {
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    // Host Information
-    hostName: '',
-    hostDob: '',
-    hostAddress: '',
-    hostCity: '',
-    hostProvince: 'Ontario',
-    hostPostalCode: '',
-    hostPhone: '',
-    hostEmail: '',
-    hostStatus: 'Canadian Citizen',
-    hostJob: '',
-    hostEmployer: '',
-    hostHouseholdSize: '1',
-    hostDependents: '',
-    
-    // Invitee Information
-    guestName: '',
-    guestDob: '',
-    guestAddress: '',
-    guestPhone: '',
-    guestPassport: '',
-    guestRelationship: '',
-    
-    // Trip Details
-    visitPurpose: 'Tourism and visiting family',
-    visitStart: '',
-    visitEnd: '',
-    stayAddress: '',
-    financialResponsibility: 'Guest will cover all expenses',
-    notarizationPlanned: 'Yes'
-  });
+    <!-- Header -->
+    <header class="bg-red-700 text-white py-8 px-6 shadow-lg relative overflow-hidden no-print">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between relative z-10">
+            <div class="flex items-center gap-4">
+                <div class="bg-white p-2 rounded-lg shadow-inner transform -rotate-3 hover:rotate-0 transition-transform">
+                    <svg viewBox="0 0 24 24" class="w-10 h-10 text-red-600" fill="currentColor">
+                        <path d="M12,2L13.5,6.5L18,5L16.5,9.5L21,11L16.5,12.5L18,17L13.5,15.5L12,20L10.5,15.5L6,17L7.5,12.5L3,11L7.5,9.5L6,5L10.5,6.5L12,2Z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-black tracking-tight uppercase italic">The Maple Leaf Inviter</h1>
+                    <p class="text-red-100 text-sm font-medium opacity-90">Official Visitor Invitation Generator for Canada</p>
+                </div>
+            </div>
+            <div class="mt-4 md:mt-0 bg-red-800/50 backdrop-blur-sm border border-red-400/30 px-4 py-2 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                IRCC Compliance Engine
+            </div>
+        </div>
+    </header>
 
-  const provinces = [
-    'Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 
-    'Nova Scotia', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 
-    'Northwest Territories', 'Nunavut', 'Yukon'
-  ];
+    <main class="max-w-6xl mx-auto py-12 px-6 grid grid-cols-1 lg:grid-cols-12 gap-10">
+        
+        <!-- Form Section -->
+        <div class="lg:col-span-7 no-print">
+            <div class="bg-white rounded-3xl shadow-xl border border-stone-200 overflow-hidden">
+                <!-- Progress Bar -->
+                <div class="bg-stone-100 flex p-1" id="progressBar">
+                    <div class="flex-1 h-2 rounded-full mx-1 bg-red-600 transition-all duration-500"></div>
+                    <div class="flex-1 h-2 rounded-full mx-1 bg-stone-300 transition-all duration-500"></div>
+                    <div class="flex-1 h-2 rounded-full mx-1 bg-stone-300 transition-all duration-500"></div>
+                    <div class="flex-1 h-2 rounded-full mx-1 bg-stone-300 transition-all duration-500"></div>
+                    <div class="flex-1 h-2 rounded-full mx-1 bg-stone-300 transition-all duration-500"></div>
+                </div>
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+                <div class="p-8">
+                    <form id="visaForm">
+                        <!-- Step 1: Host Info -->
+                        <div id="step1" class="step-content">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="p-2 bg-red-50 rounded-lg text-red-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                </div>
+                                <h2 class="text-xl font-bold">Step 1: Your Information (The Host)</h2>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="label-text">Full Legal Name</label>
+                                    <input type="text" name="hostName" placeholder="As on Passport/PR Card" class="input-field">
+                                </div>
+                                <div>
+                                    <label class="label-text">Date of Birth</label>
+                                    <input type="date" name="hostDob" class="input-field">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="label-text">Residential Address in Canada</label>
+                                    <input type="text" name="hostAddress" placeholder="Street Address" class="input-field">
+                                </div>
+                                <div>
+                                    <label class="label-text">City</label>
+                                    <input type="text" name="hostCity" class="input-field">
+                                </div>
+                                <div>
+                                    <label class="label-text">Province</label>
+                                    <select name="hostProvince" class="input-field">
+                                        <option value="Alberta">Alberta</option>
+                                        <option value="British Columbia">British Columbia</option>
+                                        <option value="Manitoba">Manitoba</option>
+                                        <option value="New Brunswick">New Brunswick</option>
+                                        <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
+                                        <option value="Nova Scotia">Nova Scotia</option>
+                                        <option value="Ontario" selected>Ontario</option>
+                                        <option value="Prince Edward Island">Prince Edward Island</option>
+                                        <option value="Quebec">Quebec</option>
+                                        <option value="Saskatchewan">Saskatchewan</option>
+                                        <option value="Northwest Territories">Northwest Territories</option>
+                                        <option value="Nunavut">Nunavut</option>
+                                        <option value="Yukon">Yukon</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="label-text">Postal Code</label>
+                                    <input type="text" name="hostPostalCode" placeholder="A1B 2C3" class="input-field">
+                                </div>
+                                <div>
+                                    <label class="label-text">Status in Canada</label>
+                                    <select name="hostStatus" class="input-field">
+                                        <option>Canadian Citizen</option>
+                                        <option>Permanent Resident</option>
+                                        <option>Study Permit Holder</option>
+                                        <option>Work Permit Holder</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
-  const nextStep = () => setStep(s => Math.min(s + 1, 5));
-  const prevStep = () => setStep(s => Math.max(s - 1, 1));
+                        <!-- Step 2: Work & Household -->
+                        <div id="step2" class="step-content hidden-step">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="p-2 bg-red-50 rounded-lg text-red-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                                </div>
+                                <h2 class="text-xl font-bold">Step 2: Contact & Occupation</h2>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="label-text">Phone Number</label>
+                                    <input type="text" name="hostPhone" class="input-field">
+                                </div>
+                                <div>
+                                    <label class="label-text">Email Address</label>
+                                    <input type="email" name="hostEmail" class="input-field">
+                                </div>
+                                <div>
+                                    <label class="label-text">Job Title</label>
+                                    <input type="text" name="hostJob" class="input-field">
+                                </div>
+                                <div>
+                                    <label class="label-text">Employer Name</label>
+                                    <input type="text" name="hostEmployer" class="input-field">
+                                </div>
+                                <div>
+                                    <label class="label-text">Total Household Size</label>
+                                    <input type="number" name="hostHouseholdSize" value="1" class="input-field">
+                                    <span class="text-[10px] text-stone-400 mt-1">Including you and residents</span>
+                                </div>
+                                <div>
+                                    <label class="label-text">Names of Dependents</label>
+                                    <input type="text" name="hostDependents" placeholder="Spouse, children, etc." class="input-field">
+                                </div>
+                            </div>
+                        </div>
 
-  const generateLetterText = () => {
-    const today = new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' });
-    
-    return `
+                        <!-- Step 3: Guest Info -->
+                        <div id="step3" class="step-content hidden-step">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="p-2 bg-red-50 rounded-lg text-red-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                                </div>
+                                <h2 class="text-xl font-bold">Step 3: Visitor Information</h2>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="label-text">Guest's Full Name</label>
+                                    <input type="text" name="guestName" placeholder="Exactly as on Passport" class="input-field">
+                                </div>
+                                <div>
+                                    <label class="label-text">Guest's Date of Birth</label>
+                                    <input type="date" name="guestDob" class="input-field">
+                                </div>
+                                <div>
+                                    <label class="label-text">Passport Number</label>
+                                    <input type="text" name="guestPassport" class="input-field">
+                                </div>
+                                <div>
+                                    <label class="label-text">Relationship to You</label>
+                                    <input type="text" name="guestRelationship" placeholder="e.g. Mother, Friend" class="input-field">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="label-text">Guest's Home Address</label>
+                                    <input type="text" name="guestAddress" class="input-field">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Trip Details -->
+                        <div id="step4" class="step-content hidden-step">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="p-2 bg-red-50 rounded-lg text-red-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                                </div>
+                                <h2 class="text-xl font-bold">Step 4: Visit Details</h2>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="label-text">Arrival Date</label>
+                                    <input type="date" name="visitStart" class="input-field">
+                                </div>
+                                <div>
+                                    <label class="label-text">Departure Date</label>
+                                    <input type="date" name="visitEnd" class="input-field">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="label-text">Purpose of Visit</label>
+                                    <input type="text" name="visitPurpose" placeholder="Tourism and visiting family" class="input-field">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="label-text">Stay Address in Canada</label>
+                                    <input type="text" name="stayAddress" placeholder="If different from your address" class="input-field">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="label-text">Financial Responsibility</label>
+                                    <select name="financialResponsibility" class="input-field">
+                                        <option value="Guest will cover all expenses">Guest will cover all expenses</option>
+                                        <option value="Host will cover all expenses">Host will cover all expenses</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Finalize -->
+                        <div id="step5" class="step-content hidden-step text-center py-10">
+                            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            </div>
+                            <h2 class="text-2xl font-bold mb-2">Letter is Ready!</h2>
+                            <p class="text-stone-600 mb-8 max-w-md mx-auto">
+                                We've compiled your data into a legally standard format. You can now download the text or print a copy.
+                            </p>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-sm mx-auto">
+                                <button type="button" onclick="downloadLetter()" class="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl shadow-lg transition-all transform hover:scale-105">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                    Download TXT
+                                </button>
+                                <button type="button" onclick="window.print()" class="flex items-center justify-center gap-2 bg-stone-800 hover:bg-stone-900 text-white font-bold py-4 rounded-2xl shadow-lg transition-all transform hover:scale-105">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                                    Print Letter
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Nav Buttons -->
+                    <div id="navButtons" class="mt-12 flex items-center justify-between border-t border-stone-100 pt-8">
+                        <button id="prevBtn" onclick="changeStep(-1)" class="flex items-center gap-2 font-bold px-6 py-3 rounded-xl transition-all text-stone-500 hover:bg-stone-100 invisible">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Previous
+                        </button>
+                        <button id="nextBtn" onclick="changeStep(1)" class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 rounded-2xl shadow-md transition-all transform hover:translate-x-1">
+                            Continue <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Box -->
+            <div class="mt-8 bg-blue-50 border border-blue-100 p-6 rounded-3xl flex gap-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-blue-500 flex-shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <div>
+                    <h4 class="font-bold text-blue-900 mb-1 italic uppercase text-xs tracking-wider">Pro-Tip for Approval</h4>
+                    <p class="text-blue-800 text-sm leading-relaxed">
+                        IRCC requires a copy of your status document (Passport, PR Card, or Citizenship Certificate). For some visa offices, this letter <strong>must</strong> be notarized by a Canadian Notary Public.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Preview Section -->
+        <div class="lg:col-span-5 relative">
+            <div class="sticky top-10">
+                <div class="flex items-center justify-between mb-4 no-print">
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-stone-400">Live Document Preview</h3>
+                    <div class="flex gap-1">
+                        <div class="w-2 h-2 rounded-full bg-red-400"></div>
+                        <div class="w-2 h-2 rounded-full bg-red-400"></div>
+                        <div class="w-2 h-2 rounded-full bg-red-400"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-2xl border-t-4 border-red-600 min-h-[600px] text-[11px] md:text-sm serif-font leading-relaxed whitespace-pre-wrap text-stone-800 overflow-y-auto max-h-[85vh] relative" id="letterPreview">
+                    <!-- Letter content injected here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-500 py-12 px-6 mt-20 border-t border-stone-800 no-print">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center gap-4 grayscale opacity-50">
+                <svg viewBox="0 0 24 24" class="w-6 h-6 text-white" fill="currentColor">
+                    <path d="M12,2L13.5,6.5L18,5L16.5,9.5L21,11L16.5,12.5L18,17L13.5,15.5L12,20L10.5,15.5L6,17L7.5,12.5L3,11L7.5,9.5L6,5L10.5,6.5L12,2Z" />
+                </svg>
+                <span class="font-black italic tracking-tighter">MAPLE LEAF INVITER © 2026</span>
+            </div>
+            <div class="text-center md:text-right text-[10px] max-w-md leading-loose uppercase tracking-widest">
+                Disclaimer: This application provides a template based on IRCC guidelines. It is not legal advice. 
+                Issuance of a visitor visa is at the sole discretion of the visa officer.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+        const form = document.getElementById('visaForm');
+        const previewEl = document.getElementById('letterPreview');
+
+        // Initial Data Structure
+        const formData = {
+            hostName: '', hostDob: '', hostAddress: '', hostCity: '', hostProvince: 'Ontario',
+            hostPostalCode: '', hostPhone: '', hostEmail: '', hostStatus: 'Canadian Citizen',
+            hostJob: '', hostEmployer: '', hostHouseholdSize: '1', hostDependents: '',
+            guestName: '', guestDob: '', guestAddress: '', guestPassport: '', guestRelationship: '',
+            visitPurpose: 'Tourism and visiting family', visitStart: '', visitEnd: '',
+            stayAddress: '', financialResponsibility: 'Guest will cover all expenses'
+        };
+
+        // Listen for input changes
+        form.addEventListener('input', (e) => {
+            formData[e.target.name] = e.target.value;
+            updatePreview();
+        });
+
+        function updatePreview() {
+            const today = new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' });
+            const letter = `
 ${today}
 
 To: 
@@ -75,332 +338,100 @@ The Visa Officer
 Immigration, Refugees and Citizenship Canada (IRCC)
 Canadian Embassy / Consulate / High Commission
 
-RE: LETTER OF INVITATION FOR ${formData.guestName.toUpperCase()}
+RE: LETTER OF INVITATION FOR ${formData.guestName.toUpperCase() || '[VISITOR NAME]'}
 
 Dear Visa Officer,
 
-I, ${formData.hostName}, born on ${formData.hostDob || '[Date of Birth]'}, am writing this letter to formally invite my ${formData.guestRelationship || '[Relationship]'}, ${formData.guestName}, born on ${formData.guestDob || '[Date of Birth]'}, to visit me in Canada.
+I, ${formData.hostName || '[Host Name]'}, born on ${formData.hostDob || '[Host DOB]'}, am writing this letter to formally invite my ${formData.guestRelationship || '[Relationship]'}, ${formData.guestName || '[Guest Name]'}, born on ${formData.guestDob || '[Guest DOB]'}, to visit me in Canada.
 
-I am currently a ${formData.hostStatus} residing at ${formData.hostAddress}, ${formData.hostCity}, ${formData.hostProvince}, ${formData.hostPostalCode}. I am employed as a ${formData.hostJob || '[Job Title]'} at ${formData.hostEmployer || '[Employer Name]'}.
+I am currently a ${formData.hostStatus} residing at ${formData.hostAddress || '[Address]'}, ${formData.hostCity || '[City]'}, ${formData.hostProvince}, ${formData.hostPostalCode || '[Postal Code]'}. I am employed as a ${formData.hostJob || '[Job Title]'} at ${formData.hostEmployer || '[Employer Name]'}.
 
 Trip Details:
-The purpose of the visit is ${formData.visitPurpose.toLowerCase()}. ${formData.guestName} plans to arrive in Canada on ${formData.visitStart || '[Start Date]'} and depart on ${formData.visitEnd || '[End Date]'}. During this stay, ${formData.guestName} will be residing at ${formData.stayAddress || formData.hostAddress}.
+The purpose of the visit is ${formData.visitPurpose.toLowerCase()}. ${formData.guestName || '[Guest Name]'} plans to arrive in Canada on ${formData.visitStart || '[Start Date]'} and depart on ${formData.visitEnd || '[End Date]'}. During this stay, ${formData.guestName || '[Guest Name]'} will be residing at ${formData.stayAddress || formData.hostAddress || '[Stay Address]'}.
 
 Financial Arrangements:
 ${formData.financialResponsibility === 'Host will cover all expenses' 
   ? `I will be fully responsible for all costs associated with this trip, including airfare, accommodation, and daily living expenses. I have attached my financial documents to demonstrate my ability to provide this support.` 
-  : `All costs related to this visit, including transportation and living expenses, will be covered by ${formData.guestName}. I will provide accommodation at my residence for the duration of the stay.`}
+  : `All costs related to this visit, including transportation and living expenses, will be covered by ${formData.guestName || 'the guest'}. I will provide accommodation at my residence for the duration of the stay.`}
 
 Personal Information:
 My household currently consists of ${formData.hostHouseholdSize} person(s)${formData.hostDependents ? ` (including my dependents: ${formData.hostDependents})` : ''}. 
 
-I understand that this letter is intended to support the Temporary Resident Visa application and does not guarantee its issuance. However, I confirm that all information provided is true and that ${formData.guestName} intends to return to their home country before their visa expires.
+I understand that this letter is intended to support the Temporary Resident Visa application and does not guarantee its issuance. However, I confirm that all information provided is true and that ${formData.guestName || '[Guest Name]'} intends to return to their home country before their visa expires.
 
-Please feel free to contact me at ${formData.hostPhone} or ${formData.hostEmail} should you require any further information.
+Please feel free to contact me at ${formData.hostPhone || '[Phone]'} or ${formData.hostEmail || '[Email]'} should you require any further information.
 
 Sincerely,
 
+
 (Signature)
 
-${formData.hostName}
-    `.trim();
-  };
+${formData.hostName || '[Host Name]'}
 
-  const downloadLetter = () => {
-    const element = document.createElement("a");
-    const file = new Blob([generateLetterText()], {type: 'text/plain'});
-    element.href = URL.createObjectURL(file);
-    element.download = `Invitation_Letter_${formData.guestName.replace(/\s/g, '_')}.txt`;
-    document.body.appendChild(element);
-    element.click();
-  };
+<div class="mt-12 border-t border-stone-100 pt-8 opacity-20 flex flex-col items-center no-print">
+    <svg viewBox="0 0 24 24" class="w-16 h-16 text-red-600 mb-2" fill="currentColor"><path d="M12,2L13.5,6.5L18,5L16.5,9.5L21,11L16.5,12.5L18,17L13.5,15.5L12,20L10.5,15.5L6,17L7.5,12.5L3,11L7.5,9.5L6,5L10.5,6.5L12,2Z" /></svg>
+    <p class="font-sans text-[10px] tracking-[0.2em] font-black uppercase italic">The Maple Leaf Inviter</p>
+</div>
+            `.trim();
+            previewEl.innerHTML = letter;
+        }
 
-  // SVG Components
-  const MapleLeaf = ({ className }) => (
-    <svg viewBox="0 0 24 24" className={className} fill="currentColor">
-      <path d="M12,2L13.5,6.5L18,5L16.5,9.5L21,11L16.5,12.5L18,17L13.5,15.5L12,20L10.5,15.5L6,17L7.5,12.5L3,11L7.5,9.5L6,5L10.5,6.5L12,2Z" />
-    </svg>
-  );
+        function changeStep(delta) {
+            const next = currentStep + delta;
+            if (next < 1 || next > totalSteps) return;
 
-  return (
-    <div className="min-h-screen bg-stone-50 font-sans text-stone-900 selection:bg-red-100">
-      {/* Header */}
-      <header className="bg-red-700 text-white py-8 px-6 shadow-lg relative overflow-hidden">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between relative z-10">
-          <div className="flex items-center gap-4">
-            <div className="bg-white p-2 rounded-lg shadow-inner transform -rotate-3 hover:rotate-0 transition-transform">
-              <MapleLeaf className="w-10 h-10 text-red-600" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-black tracking-tight uppercase italic">The Maple Leaf Inviter</h1>
-              <p className="text-red-100 text-sm font-medium opacity-90">Official Visitor Invitation Generator for Canada</p>
-            </div>
-          </div>
-          <div className="mt-4 md:mt-0 bg-red-800/50 backdrop-blur-sm border border-red-400/30 px-4 py-2 rounded-full flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
-            <ShieldCheck className="w-4 h-4" />
-            IRCC Compliance Engine
-          </div>
-        </div>
-        {/* Background Maple Leaves Decoration */}
-        <MapleLeaf className="absolute -bottom-10 -right-10 w-48 h-48 text-red-600/20 rotate-12" />
-        <MapleLeaf className="absolute -top-10 -left-10 w-32 h-32 text-red-800/30 -rotate-12" />
-      </header>
-
-      <main className="max-w-5xl mx-auto py-12 px-6 grid grid-cols-1 lg:grid-cols-12 gap-10">
-        
-        {/* Form Section */}
-        <div className="lg:col-span-7">
-          <div className="bg-white rounded-3xl shadow-xl border border-stone-200 overflow-hidden">
-            {/* Progress Bar */}
-            <div className="bg-stone-100 flex p-1">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div 
-                  key={i} 
-                  className={`flex-1 h-2 rounded-full mx-1 transition-all duration-500 ${step >= i ? 'bg-red-600' : 'bg-stone-300'}`}
-                />
-              ))}
-            </div>
-
-            <div className="p-8">
-              {/* Step 1: Host Info */}
-              {step === 1 && (
-                <section className="animate-in slide-in-from-right-4 duration-300">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-red-50 rounded-lg"><User className="text-red-600" /></div>
-                    <h2 className="text-xl font-bold">Step 1: Your Information (The Host)</h2>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <InputField label="Full Legal Name" name="hostName" value={formData.hostName} onChange={handleInputChange} placeholder="As on Passport/PR Card" />
-                    <InputField label="Date of Birth" name="hostDob" value={formData.hostDob} onChange={handleInputChange} type="date" />
-                    <div className="md:col-span-2">
-                      <InputField label="Residential Address in Canada" name="hostAddress" value={formData.hostAddress} onChange={handleInputChange} placeholder="Street Address" />
-                    </div>
-                    <InputField label="City" name="hostCity" value={formData.hostCity} onChange={handleInputChange} />
-                    <SelectField label="Province" name="hostProvince" value={formData.hostProvince} onChange={handleInputChange} options={provinces} />
-                    <InputField label="Postal Code" name="hostPostalCode" value={formData.hostPostalCode} onChange={handleInputChange} placeholder="A1B 2C3" />
-                    <InputField label="Status in Canada" name="hostStatus" value={formData.hostStatus} onChange={handleInputChange} options={['Canadian Citizen', 'Permanent Resident', 'Study Permit Holder', 'Work Permit Holder']} />
-                  </div>
-                </section>
-              )}
-
-              {/* Step 2: Contact & Work */}
-              {step === 2 && (
-                <section className="animate-in slide-in-from-right-4 duration-300">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-red-50 rounded-lg"><Briefcase className="text-red-600" /></div>
-                    <h2 className="text-xl font-bold">Step 2: Contact & Occupation</h2>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <InputField label="Phone Number" name="hostPhone" value={formData.hostPhone} onChange={handleInputChange} />
-                    <InputField label="Email Address" name="hostEmail" value={formData.hostEmail} onChange={handleInputChange} type="email" />
-                    <InputField label="Job Title" name="hostJob" value={formData.hostJob} onChange={handleInputChange} />
-                    <InputField label="Employer Name" name="hostEmployer" value={formData.hostEmployer} onChange={handleInputChange} />
-                    <InputField label="Total Household Size" name="hostHouseholdSize" value={formData.hostHouseholdSize} onChange={handleInputChange} type="number" helper="Including you and everyone living with you" />
-                    <InputField label="Names of Dependents" name="hostDependents" value={formData.hostDependents} onChange={handleInputChange} placeholder="Spouse, children, etc." />
-                  </div>
-                </section>
-              )}
-
-              {/* Step 3: Guest Info */}
-              {step === 3 && (
-                <section className="animate-in slide-in-from-right-4 duration-300">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-red-50 rounded-lg"><Globe className="text-red-600" /></div>
-                    <h2 className="text-xl font-bold">Step 3: Visitor Information</h2>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <InputField label="Guest's Full Name" name="guestName" value={formData.guestName} onChange={handleInputChange} placeholder="Exactly as on Passport" />
-                    <InputField label="Guest's Date of Birth" name="guestDob" value={formData.guestDob} onChange={handleInputChange} type="date" />
-                    <InputField label="Passport Number" name="guestPassport" value={formData.guestPassport} onChange={handleInputChange} />
-                    <InputField label="Relationship to You" name="guestRelationship" value={formData.guestRelationship} onChange={handleInputChange} placeholder="e.g. Mother, Brother, Friend" />
-                    <div className="md:col-span-2">
-                      <InputField label="Guest's Home Address" name="guestAddress" value={formData.guestAddress} onChange={handleInputChange} />
-                    </div>
-                  </div>
-                </section>
-              )}
-
-              {/* Step 4: Trip Details */}
-              {step === 4 && (
-                <section className="animate-in slide-in-from-right-4 duration-300">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-red-50 rounded-lg"><Map className="text-red-600" /></div>
-                    <h2 className="text-xl font-bold">Step 4: Visit Details</h2>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <InputField label="Arrival Date" name="visitStart" value={formData.visitStart} onChange={handleInputChange} type="date" />
-                    <InputField label="Departure Date" name="visitEnd" value={formData.visitEnd} onChange={handleInputChange} type="date" />
-                    <div className="md:col-span-2">
-                      <InputField label="Purpose of Visit" name="visitPurpose" value={formData.visitPurpose} onChange={handleInputChange} placeholder="e.g. Attending convocation, vacation, etc." />
-                    </div>
-                    <div className="md:col-span-2">
-                      <InputField label="Stay Address in Canada" name="stayAddress" value={formData.stayAddress} onChange={handleInputChange} placeholder="If different from your address" />
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-semibold text-stone-700 mb-2 uppercase tracking-wide">Financial Responsibility</label>
-                      <select 
-                        name="financialResponsibility" 
-                        value={formData.financialResponsibility} 
-                        onChange={handleInputChange}
-                        className="w-full p-4 bg-stone-50 border-2 border-stone-200 rounded-xl focus:border-red-500 focus:ring-0 transition-all outline-none"
-                      >
-                        <option>Guest will cover all expenses</option>
-                        <option>Host will cover all expenses</option>
-                      </select>
-                    </div>
-                  </div>
-                </section>
-              )}
-
-              {/* Step 5: Review & Download */}
-              {step === 5 && (
-                <section className="animate-in zoom-in-95 duration-300 text-center py-10">
-                  <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <CheckCircle className="w-12 h-12 text-green-600" />
-                  </div>
-                  <h2 className="text-2xl font-bold mb-2">Letter is Ready!</h2>
-                  <p className="text-stone-600 mb-8 max-w-md mx-auto">
-                    We've compiled your data into a legally standard format. You can now download the text and paste it into a document editor.
-                  </p>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-sm mx-auto">
-                    <button 
-                      onClick={downloadLetter}
-                      className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl shadow-lg transition-all transform hover:scale-105"
-                    >
-                      <Download className="w-5 h-5" /> Download TXT
-                    </button>
-                    <button 
-                      onClick={() => window.print()}
-                      className="flex items-center justify-center gap-2 bg-stone-800 hover:bg-stone-900 text-white font-bold py-4 rounded-2xl shadow-lg transition-all transform hover:scale-105"
-                    >
-                      <FileText className="w-5 h-5" /> Print Preview
-                    </button>
-                  </div>
-                </section>
-              )}
-
-              {/* Navigation Buttons */}
-              {step < 5 && (
-                <div className="mt-12 flex items-center justify-between border-t border-stone-100 pt-8">
-                  <button 
-                    onClick={prevStep}
-                    disabled={step === 1}
-                    className={`flex items-center gap-2 font-bold px-6 py-3 rounded-xl transition-all ${step === 1 ? 'opacity-0 cursor-default' : 'text-stone-500 hover:bg-stone-100'}`}
-                  >
-                    <ChevronLeft className="w-5 h-5" /> Previous
-                  </button>
-                  <button 
-                    onClick={nextStep}
-                    className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 rounded-2xl shadow-md transition-all transform hover:translate-x-1"
-                  >
-                    Continue <ChevronRight className="w-5 h-5" />
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-          
-          {/* Compliance Notice */}
-          <div className="mt-8 bg-blue-50 border border-blue-100 p-6 rounded-3xl flex gap-4">
-            <Info className="w-10 h-10 text-blue-500 flex-shrink-0 mt-1" />
-            <div>
-              <h4 className="font-bold text-blue-900 mb-1 italic">Pro-Tip for Approval</h4>
-              <p className="text-blue-800 text-sm leading-relaxed">
-                IRCC requires that you include a copy of your status document (Passport, PR Card, or Citizenship Certificate) when sending this letter. For some visa offices, this letter <strong>must</strong> be notarized. Check with the specific visa office processing the application.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Live Preview Section */}
-        <div className="lg:col-span-5 relative">
-          <div className="sticky top-10">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-stone-400">Live Document Preview</h3>
-              <div className="flex gap-1">
-                <div className="w-2 h-2 rounded-full bg-red-400"></div>
-                <div className="w-2 h-2 rounded-full bg-red-400"></div>
-                <div className="w-2 h-2 rounded-full bg-red-400"></div>
-              </div>
-            </div>
+            // Hide all steps
+            document.querySelectorAll('.step-content').forEach(s => s.classList.add('hidden-step'));
             
-            <div className="bg-white p-8 rounded-xl shadow-2xl border-t-4 border-red-600 min-h-[600px] text-xs font-serif leading-relaxed whitespace-pre-wrap text-stone-800 overflow-y-auto max-h-[80vh]">
-              {generateLetterText()}
-              
-              {/* Fake Watermark */}
-              <div className="mt-12 border-t border-stone-100 pt-8 opacity-20 flex flex-col items-center">
-                <MapleLeaf className="w-16 h-16 text-red-600 mb-2" />
-                <p className="font-sans text-[10px] tracking-[0.2em] font-black uppercase italic">The Maple Leaf Inviter</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
+            // Show new step
+            document.getElementById(`step${next}`).classList.remove('hidden-step');
 
-      {/* Footer */}
-      <footer className="bg-stone-900 text-stone-500 py-12 px-6 mt-20 border-t border-stone-800">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-4 grayscale opacity-50">
-            <MapleLeaf className="w-6 h-6" />
-            <span className="font-black italic tracking-tighter">MAPLE LEAF INVITER © 2026</span>
-          </div>
-          <div className="text-center md:text-right text-[10px] max-w-md leading-loose uppercase tracking-widest">
-            Disclaimer: This application provides a template based on IRCC guidelines. It is not legal advice. 
-            Issuance of a visitor visa is at the sole discretion of the visa officer.
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-};
+            // Update progress bar
+            const bars = document.querySelectorAll('#progressBar div');
+            bars.forEach((bar, i) => {
+                bar.classList.toggle('bg-red-600', i < next);
+                bar.classList.toggle('bg-stone-300', i >= next);
+            });
 
-// Sub-components for cleaner structure
-const InputField = ({ label, name, value, onChange, type = 'text', placeholder = '', helper = '', options = null }) => {
-  if (options) {
-    return (
-      <div className="flex flex-col gap-1">
-        <label className="block text-[10px] font-black text-stone-500 uppercase tracking-widest ml-1">{label}</label>
-        <select 
-          name={name} 
-          value={value} 
-          onChange={onChange}
-          className="w-full p-4 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all outline-none font-medium text-sm"
-        >
-          {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-        </select>
-      </div>
-    );
-  }
+            // Update buttons
+            document.getElementById('prevBtn').style.visibility = next === 1 ? 'hidden' : 'visible';
+            const nextBtn = document.getElementById('nextBtn');
+            if (next === totalSteps) {
+                nextBtn.style.display = 'none';
+            } else {
+                nextBtn.style.display = 'flex';
+                nextBtn.innerHTML = `Continue <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+            }
 
-  return (
-    <div className="flex flex-col gap-1">
-      <label className="block text-[10px] font-black text-stone-500 uppercase tracking-widest ml-1">{label}</label>
-      <input 
-        type={type} 
-        name={name} 
-        value={value} 
-        onChange={onChange} 
-        placeholder={placeholder}
-        className="w-full p-4 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all outline-none font-medium text-sm placeholder:text-stone-300"
-      />
-      {helper && <span className="text-[10px] text-stone-400 mt-1 ml-1">{helper}</span>}
-    </div>
-  );
-};
+            currentStep = next;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-const SelectField = ({ label, name, value, onChange, options }) => (
-  <div className="flex flex-col gap-1">
-    <label className="block text-[10px] font-black text-stone-500 uppercase tracking-widest ml-1">{label}</label>
-    <select 
-      name={name} 
-      value={value} 
-      onChange={onChange}
-      className="w-full p-4 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all outline-none font-medium text-sm"
-    >
-      {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-    </select>
-  </div>
-);
+        function downloadLetter() {
+            const text = previewEl.innerText.replace("The Maple Leaf Inviter", "");
+            const element = document.createElement("a");
+            const file = new Blob([text], {type: 'text/plain'});
+            element.href = URL.createObjectURL(file);
+            element.download = `Invitation_Letter_${formData.guestName.replace(/\s/g, '_') || 'Canada'}.txt`;
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
 
-export default App;
+        // Standard Tailwinds Classes for repeated use
+        const cssMap = {
+            'input-field': 'w-full p-4 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all outline-none font-medium text-sm placeholder:text-stone-300',
+            'label-text': 'block text-[10px] font-black text-stone-500 uppercase tracking-widest mb-1 ml-1'
+        };
+
+        Object.keys(cssMap).forEach(cls => {
+            document.querySelectorAll(`.${cls}`).forEach(el => {
+                el.className = `${el.className} ${cssMap[cls]}`;
+            });
+        });
+
+        // Init
+        updatePreview();
+    </script>
+</body>
+</html>
