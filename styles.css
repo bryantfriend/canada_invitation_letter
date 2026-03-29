@@ -1,0 +1,250 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+    --primary: #ef4444;
+    --primary-dark: #b91c1c;
+    --secondary: #1e293b;
+    --accent: #f59e0b;
+    --bg-stone: #fafaf9;
+    --glass: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-stone);
+    color: var(--secondary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, .serif-font {
+    font-family: 'Playfair Display', serif;
+}
+
+.maple-bg {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ef4444' fill-opacity='0.02'%3E%3Cpath d='M12,2L13.5,6.5L18,5L16.5,9.5L21,11L16.5,12.5L18,17L13.5,15.5L12,20L10.5,15.5L6,17L7.5,12.5L3,11L7.5,9.5L6,5L10.5,6.5L12,2Z'/%3E%3C/svg%3E");
+    background-size: 100px;
+    background-attachment: fixed;
+}
+
+/* Glassmorphism */
+.glass-pane {
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-soft);
+}
+
+/* Premium Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Buttons */
+.btn-premium {
+    background-color: var(--primary);
+    color: white;
+    font-weight: 700;
+    padding: 1rem 2rem;
+    border-radius: 9999px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.2);
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-premium:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.3);
+}
+
+.btn-premium:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 2px solid var(--secondary);
+    color: var(--secondary);
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary);
+    color: white;
+}
+
+/* Forms */
+.input-premium {
+    width: 100%;
+    padding: 1.25rem;
+    background: white;
+    border: 1px solid #e7e5e4;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9375rem;
+    transition: all 0.3s ease;
+}
+
+.input-premium:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+.label-premium {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #a8a29e;
+    margin-bottom: 0.5rem;
+    margin-left: 0.25rem;
+}
+
+/* Visa Cards */
+.visa-card {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid #e7e5e4;
+    cursor: pointer;
+}
+
+.visa-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.08);
+}
+
+.visa-card .icon-box {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background-color: #fee2e2;
+    color: var(--primary);
+    transition: all 0.3s ease;
+}
+
+.visa-card:hover .icon-box {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* Help Box */
+.help-box {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 1px solid #bfdbfe;
+}
+
+/* Letter Preview */
+#letterPreview {
+    background: white !important;
+    padding: 3rem !important;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1) !important;
+    border-radius: 2px !important;
+    min-height: 1056px; /* Approx 11 inches at 96dpi */
+    width: 100%;
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.6;
+    overflow-y: auto;
+    position: relative;
+    border: 1px solid #eee;
+}
+
+#letterPreview.serif-font {
+    font-family: 'Playfair Display', serif;
+}
+
+@page {
+    margin: 0; /* Forces most browsers to hide headers/footers */
+}
+
+@media print {
+    /* Hide everything that isn't the letter */
+    .no-print, 
+    header, 
+    footer, 
+    #navButtons, 
+    .progressBar,
+    .icon-box,
+    h3.text-\[10px\], /* The "Live Document Preview" heading */
+    .flex.gap-1 /* The status dots next to it */
+    { 
+        display: none !important; 
+    }
+
+    body {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Reset the grid/flex layout for printing */
+    main, .grid, .lg\:col-span-12, .lg\:col-span-10, .lg\:col-span-7, .lg\:col-span-5 {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: static !important;
+    }
+
+    /* The sticky container should not be sticky during print */
+    .sticky {
+        position: static !important;
+    }
+
+    /* Style the actual letter for paper */
+    #letterPreview {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        font-size: 11pt !important; /* Standard letter size */
+        color: black !important;
+        line-height: 1.5 !important;
+        white-space: pre-wrap !important;
+        overflow: visible !important;
+        max-height: none !important;
+    }
+
+    /* Ensure a professional serif font if requested, otherwise standard */
+    #letterPreview.serif-font {
+        font-family: "Playfair Display", "Times New Roman", serif !important;
+    }
+
+    /* Force page breaks to be handled gracefully */
+    .guest-entry, p, div {
+        page-break-inside: avoid;
+    }
+}
