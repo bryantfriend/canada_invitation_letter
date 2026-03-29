@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Visa Invitation - Maple Leaf Inviter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="maple-bg">
+
+    <!-- Header -->
+    <header class="py-10 px-6 no-print">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <a href="../index.html" class="flex items-center gap-4 group">
+                <div class="glass-pane p-2 rounded-xl text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all duration-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </div>
+                <span class="font-black italic uppercase tracking-tighter text-stone-900">Back to Home</span>
+            </a>
+            
+            <div class="flex items-center gap-6">
+                <button id="langToggle" onclick="inviter.toggleLanguage()" class="text-[10px] font-black uppercase tracking-widest text-stone-400 hover:text-red-600 transition-colors">Switch to French</button>
+                <div class="glass-pane px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest text-red-600 bg-red-50/50">
+                    Super Visa
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto py-8 px-6 grid grid-cols-1 lg:grid-cols-12 gap-10">
+        
+        <!-- Form Section -->
+        <div class="lg:col-span-7 no-print">
+            <div class="glass-pane rounded-[40px] overflow-hidden">
+                <!-- Progress Bar -->
+                <div class="h-1 bg-stone-100 w-full overflow-hidden">
+                    <div id="progressBarInner" class="h-full bg-red-600 transition-all duration-700 ease-in-out" style="width: 20%"></div>
+                </div>
+
+                <div class="p-10">
+                    <form id="visaForm">
+                        <!-- Step 1: Host Info -->
+                        <div id="step1" class="step-content animate-fade-in">
+                            <div class="flex items-center gap-4 mb-10">
+                                <div class="w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center shadow-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                </div>
+                                <div>
+                                    <h2 class="text-3xl font-black text-stone-900 leading-none mb-2">Host Details (Main)</h2>
+                                    <p class="text-stone-400 text-sm font-medium">For Super Visa, you must meet LICO requirements.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="label-premium">Full Legal Name</label>
+                                    <input type="text" name="hostName" placeholder="As on Passport/PR Card" class="input-premium">
+                                </div>
+                                <div>
+                                    <label class="label-premium">Date of Birth</label>
+                                    <input type="date" name="hostDob" class="input-premium">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="label-premium">Address in Canada</label>
+                                    <input type="text" name="hostAddress" placeholder="Street Address" class="input-premium">
+                                </div>
+                                <div>
+                                    <label class="label-premium">City</label>
+                                    <input type="text" name="hostCity" class="input-premium">
+                                </div>
+                                <div>
+                                    <label class="label-premium">Province</label>
+                                    <select name="hostProvince" class="input-premium">
+                                        <option value="Ontario" selected>Ontario</option>
+                                        <option value="British Columbia">British Columbia</option>
+                                        <option value="Alberta">Alberta</option>
+                                        <!-- Add more -->
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="label-premium">Postal Code</label>
+                                    <input type="text" name="hostPostalCode" placeholder="A1B 2C3" class="input-premium">
+                                </div>
+                                <div>
+                                    <label class="label-premium">Status in Canada</label>
+                                    <select name="hostStatus" class="input-premium">
+                                        <option>Canadian Citizen</option>
+                                        <option>Permanent Resident</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Co-signer & Financials -->
+                        <div id="step2" class="step-content hidden animate-fade-in">
+                            <div class="flex items-center gap-4 mb-10">
+                                <div class="w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center shadow-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                </div>
+                                <div>
+                                    <h2 class="text-3xl font-black text-stone-900 leading-none mb-2">Financial Strength</h2>
+                                    <p class="text-stone-400 text-sm font-medium">Verify your LICO and include a co-signer if needed.</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="label-premium">Household Size</label>
+                                    <input type="number" name="hostHouseholdSize" value="1" class="input-premium">
+                                </div>
+                                <div>
+                                    <label class="label-premium">Annual Income (CAD)</label>
+                                    <input type="number" name="hostIncome" placeholder="Gross Income" class="input-premium">
+                                </div>
+                                <div class="md:col-span-2 p-6 glass-pane border border-stone-100 rounded-3xl flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-bold text-stone-800 text-sm mb-1">Add Spouse as Co-signer?</h4>
+                                        <p class="text-stone-400 text-xs">Recommended to meet LICO requirements.</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="hasCosigner" id="cosignerToggle" onchange="inviter.toggleCosigner()" class="sr-only peer">
+                                        <div class="w-11 h-6 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                                    </label>
+                                </div>
+                                <div id="cosignerFields" class="md:col-span-2 hidden animate-fade-in">
+                                    <label class="label-premium">Co-signer Full Name</label>
+                                    <input type="text" name="cosignerName" placeholder="Spouse's Legal Name" class="input-premium mb-4">
+                                    <label class="label-premium">Co-signer Job Title</label>
+                                    <input type="text" name="cosignerJob" class="input-premium">
+                                </div>
+                                <div>
+                                    <label class="label-premium">Job Title (Primary)</label>
+                                    <input type="text" name="hostJob" class="input-premium">
+                                </div>
+                                <div>
+                                    <label class="label-premium">Employer (Primary)</label>
+                                    <input type="text" name="hostEmployer" class="input-premium">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Visitors (Same) -->
+                        <div id="step3" class="step-content hidden animate-fade-in">
+                            <div class="flex items-center justify-between gap-4 mb-10">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center shadow-lg">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-3xl font-black text-stone-900 leading-none mb-2">Parents / Grandparents</h2>
+                                        <p class="text-stone-400 text-sm font-medium">Add guests for the Super Visa.</p>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="inviter.addGuest()" class="btn-premium py-2 px-4 text-xs">
+                                   + Add Guest
+                                </button>
+                            </div>
+                            
+                            <div id="guestsContainer"></div>
+                        </div>
+
+                        <!-- Step 4: Trip Details -->
+                        <div id="step4" class="step-content hidden animate-fade-in">
+                            <div class="flex items-center gap-4 mb-10">
+                                <div class="w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center shadow-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                                </div>
+                                <div>
+                                    <h2 class="text-3xl font-black text-stone-900 leading-none mb-2">Visit Details</h2>
+                                    <p class="text-stone-400 text-sm font-medium">Insurance and stay duration.</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="label-premium">Arrival Date</label>
+                                    <input type="date" name="visitStart" class="input-premium">
+                                </div>
+                                <div>
+                                    <label class="label-premium">Departure Date</label>
+                                    <input type="date" name="visitEnd" class="input-premium">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="label-premium">Stay Address</label>
+                                    <input type="text" name="stayAddress" placeholder="Usually Host Address" class="input-premium">
+                                </div>
+                                <div class="md:col-span-2 p-6 glass-pane border border-stone-100 rounded-3xl flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-bold text-stone-800 text-sm mb-1">Include Notary Block?</h4>
+                                        <p class="text-stone-400 text-xs">Adds a placeholder for a Canadian Notary signature.</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="useNotary" class="sr-only peer">
+                                        <div class="w-11 h-6 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Finalize -->
+                        <div id="step5" class="step-content hidden text-center py-20 animate-fade-in">
+                            <div class="w-24 h-24 bg-green-100 text-green-600 rounded-[32px] flex items-center justify-center mx-auto mb-8 shadow-inner">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            </div>
+                            <h2 class="text-4xl font-black text-stone-900 mb-4">Super Visa Ready.</h2>
+                            <button type="button" onclick="inviter.downloadLetter()" class="btn-premium">Download</button>
+                        </div>
+                    </form>
+
+                    <!-- Nav Buttons -->
+                    <div id="navButtons" class="mt-16 flex items-center justify-between border-t border-stone-100 pt-10">
+                        <button id="prevBtn" onclick="inviter.changeStep(-1)" class="flex items-center gap-3 font-bold text-stone-400 hover:text-stone-900 transition-all invisible">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg> Back
+                        </button>
+                        <button id="nextBtn" onclick="inviter.changeStep(1)" class="btn-premium">
+                            Continue <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Preview -->
+        <div class="lg:col-span-5 relative">
+            <div class="sticky top-10">
+                <div class="glass-pane p-12 rounded-3xl min-h-[700px] text-xs md:text-sm serif-font text-stone-800 relative shadow-2xl overflow-y-auto max-h-[85vh]" id="letterPreview"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../common.js"></script>
+    <script src="super-visa.js"></script>
+</body>
+</html>

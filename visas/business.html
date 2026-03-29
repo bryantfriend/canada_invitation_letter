@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Visitor Invitation - Maple Leaf Inviter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="maple-bg">
+
+    <!-- Header -->
+    <header class="py-10 px-6 no-print">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <a href="../index.html" class="flex items-center gap-4 group">
+                <div class="glass-pane p-2 rounded-xl text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all duration-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </div>
+                <span class="font-black italic uppercase tracking-tighter text-stone-900">Back to Home</span>
+            </a>
+            
+            <div class="flex items-center gap-6">
+                <button id="langToggle" onclick="inviter.toggleLanguage()" class="text-[10px] font-black uppercase tracking-widest text-stone-400 hover:text-red-600 transition-colors">Switch to French</button>
+                <div class="glass-pane px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest text-red-600 bg-red-50/50">
+                    Business Visitor
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto py-8 px-6 grid grid-cols-1 lg:grid-cols-12 gap-10">
+        
+        <!-- Form Section -->
+        <div class="lg:col-span-7 no-print">
+            <div class="glass-pane rounded-[40px] overflow-hidden">
+                <!-- Progress Bar -->
+                <div class="h-1 bg-stone-100 w-full overflow-hidden">
+                    <div id="progressBarInner" class="h-full bg-red-600 transition-all duration-700 ease-in-out" style="width: 20%"></div>
+                </div>
+
+                <div class="p-10">
+                    <form id="visaForm">
+                        <!-- Step 1: Corporate Info -->
+                        <div id="step1" class="step-content animate-fade-in">
+                            <div class="flex items-center gap-4 mb-10">
+                                <div class="w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center shadow-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                                </div>
+                                <div>
+                                    <h2 class="text-3xl font-black text-stone-900 leading-none mb-2">Corporate Identity</h2>
+                                    <p class="text-stone-400 text-sm font-medium">Invitation must be from a registered Canadian company.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="md:col-span-2">
+                                    <label class="label-premium">Canadian Company Name</label>
+                                    <input type="text" name="companyName" placeholder="Full Legal Company Name" class="input-premium">
+                                </div>
+                                <div>
+                                    <label class="label-premium">Business Registration #</label>
+                                    <input type="text" name="registrationNumber" placeholder="CRA BN No." class="input-premium">
+                                </div>
+                                <div>
+                                    <label class="label-premium">Inviting Executive Rank</label>
+                                    <input type="text" name="hostJob" placeholder="e.g. Director, CEO" class="input-premium">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="label-premium">Company Address</label>
+                                    <input type="text" name="hostAddress" placeholder="Head Office or Branch" class="input-premium">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Contact & Executive -->
+                        <div id="step2" class="step-content hidden animate-fade-in">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="label-premium">Inviting Officer Name</label>
+                                    <input type="text" name="hostName" class="input-premium">
+                                </div>
+                                <div>
+                                    <label class="label-premium">Direct Phone Number</label>
+                                    <input type="text" name="hostPhone" class="input-premium">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="label-premium">Corporate Email</label>
+                                    <input type="email" name="hostEmail" class="input-premium">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Guests -->
+                        <div id="step3" class="step-content hidden animate-fade-in">
+                            <div class="flex items-center justify-between gap-4 mb-10">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center shadow-lg">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-3xl font-black text-stone-900 leading-none mb-2">Delegates</h2>
+                                        <p class="text-stone-400 text-sm font-medium">Add business representatives visiting Canada.</p>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="inviter.addGuest()" class="btn-premium py-2 px-4 text-xs">
+                                   + Add Guest
+                                </button>
+                            </div>
+                            
+                            <div id="guestsContainer">
+                                <!-- Guests rendered here -->
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Visit Details -->
+                        <div id="step4" class="step-content hidden animate-fade-in">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="label-premium">Arrival Date</label>
+                                    <input type="date" name="visitStart" class="input-premium">
+                                </div>
+                                <div>
+                                    <label class="label-premium">Departure Date</label>
+                                    <input type="date" name="visitEnd" class="input-premium">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="label-premium">Purpose of Visit</label>
+                                    <input type="text" name="visitPurpose" placeholder="e.g. Sales training and site inspection" class="input-premium">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="label-premium">Who covers Expenses?</label>
+                                    <select name="financialResponsibility" class="input-premium">
+                                        <option value="Canadian Company will cover all expenses">Inviting Canadian Company</option>
+                                        <option value="Foreign Company will cover all expenses">The Foreign Employer</option>
+                                        <option value="Host will cover personal expenses">The Host Executive (Personal)</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-2 p-6 glass-pane border border-stone-100 rounded-3xl flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-bold text-stone-800 text-sm mb-1">Company Seal/Notary?</h4>
+                                        <p class="text-stone-400 text-xs">Recommended for business verification.</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="useNotary" class="sr-only peer">
+                                        <div class="w-11 h-6 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Finalize -->
+                        <div id="step5" class="step-content hidden text-center py-20 animate-fade-in">
+                            <h2 class="text-4xl font-black text-stone-900 mb-4">Letter Ready.</h2>
+                            <button type="button" onclick="inviter.downloadLetter()" class="btn-premium">Download</button>
+                        </div>
+                    </form>
+
+                    <!-- Nav Buttons -->
+                    <div id="navButtons" class="mt-16 flex items-center justify-between border-t border-stone-100 pt-10">
+                        <button id="prevBtn" onclick="inviter.changeStep(-1)" class="flex items-center gap-3 font-bold text-stone-400 hover:text-stone-900 transition-all invisible">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg> Back
+                        </button>
+                        <button id="nextBtn" onclick="inviter.changeStep(1)" class="btn-premium">
+                            Continue <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-5 relative">
+            <div class="sticky top-10">
+                <div class="glass-pane p-12 rounded-3xl min-h-[700px] text-xs md:text-sm serif-font text-stone-800 relative shadow-2xl overflow-y-auto max-h-[85vh]" id="letterPreview"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../common.js"></script>
+    <script src="business.js"></script>
+</body>
+</html>
